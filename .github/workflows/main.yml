@@ -1,19 +1,21 @@
-on: [push]
+name: Deploy to Hosting
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-    deploy_job:
+  deploy:
     runs-on: ubuntu-latest
-    name: deploy
+
     steps:
-        - name: Checkout
-        uses: actions/hnm-restoracia
-        - name: Deploy file
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Deploy to Hosting
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
-            username: ${{ secrets.FTP_USERNAME }}
-            server: ${{ secrets.FTP_SERVER }}
-            port: ${{ secrets.FTP_PORT }}
-            local_path: './static/*'
-            remote_path: '/var/www/app'
-            sftp_only: true
-            password: ${{ secrets.FTP_PASSWORD }}
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir:  autodeploy/public_html/
